@@ -63,6 +63,8 @@ const App = () => {
         // console.log(event.target.value);
         setNewNote(event.target.value);
     };
+
+    // console.log("notes: ", notes);
     const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
     /// JSX
