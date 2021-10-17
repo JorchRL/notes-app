@@ -16,14 +16,15 @@ const generateId = () => {
 app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
-app.get("/", (request, response) => {
-    console.log("You should see the front end of the app!");
-});
+// app.get("/", (request, response) => {
+//     console.log("You should see the front end of the app!");
+//     response.send("hey!");
+// });
 
 ///// Notes API
 
 app.get("/api/notes", (request, response) => {
-    console.log("requested all the notes");
+    // console.log("requested all the notes");
     response.json(notes);
 });
 
