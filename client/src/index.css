@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&family=Roboto:wght@100;300;400&display=swap");
+
+:root {
+    font-family: "Open Sans", sans-serif;
+    /* font-family: "Roboto", sans-serif; */
+}
+
+h1 {
+    color: rgb(27, 27, 27);
+    /* font-style: italic; */
+    margin-bottom: 5px;
+}
+
+.note {
+    color: rgb(83, 83, 83);
+    padding-top: 3px;
+    font-size: 15px;
+}
+
+.error {
+    color: red;
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
