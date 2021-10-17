@@ -13,10 +13,11 @@ const generateId = () => {
     return maxId + 1;
 };
 
+app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
 app.get("/", (request, response) => {
-    response.send("<h1>Hello World!</h1>");
+    console.log("You should see the front end of the app!");
 });
 
 ///// Notes API

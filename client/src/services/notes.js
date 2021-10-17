@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "https://safe-inlet-54959.herokuapp.com/api/notes";
+const baseUrl = "/api/notes"; // relative url
 
 const getAll = () => {
     const request = axios.get(baseUrl);
