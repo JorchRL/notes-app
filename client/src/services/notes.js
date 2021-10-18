@@ -1,5 +1,11 @@
 import axios from "axios";
 const baseUrl = "/api/notes"; // relative url
+/**
+ * The relative url will work when running the express server in development mode,
+ * and having it serve the built app...
+ *
+ * However it will break when testing the frontend by itself (with "npm run start")
+ */
 
 const getAll = () => {
     const request = axios.get(baseUrl);
