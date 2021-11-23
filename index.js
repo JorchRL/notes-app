@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -31,7 +32,7 @@ const generateId = () => {
 
 /////////// MongoDB ///////////////////////////\
 
-const password = "";
+const password = process.env.MONGODB_PASS;
 const dbName = "note-app";
 
 const url = `mongodb+srv://fullstack:${password}@cluster0.9m5yr.mongodb.net/${dbName}?retryWrites=true&w=majority`;
