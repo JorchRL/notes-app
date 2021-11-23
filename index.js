@@ -1,53 +1,33 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const mongoose = require("mongoose");
+const Note = require("./models/note");
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    date: "2019-05-30T17:30:31.098Z",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only Javascript",
-    date: "2019-05-30T18:39:34.091Z",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    date: "2019-05-30T19:20:14.298Z",
-    important: true,
-  },
-];
+// let notes = [
+//   {
+//     id: 1,
+//     content: "HTML is easy",
+//     date: "2019-05-30T17:30:31.098Z",
+//     important: true,
+//   },
+//   {
+//     id: 2,
+//     content: "Browser can execute only Javascript",
+//     date: "2019-05-30T18:39:34.091Z",
+//     important: false,
+//   },
+//   {
+//     id: 3,
+//     content: "GET and POST are the most important methods of HTTP protocol",
+//     date: "2019-05-30T19:20:14.298Z",
+//     important: true,
+//   },
+// ];
 
 const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
   return maxId + 1;
 };
-
-/////////// MongoDB ///////////////////////////\
-
-const password = process.env.MONGODB_PASS;
-const dbName = "note-app";
-
-const url = `mongodb+srv://fullstack:${password}@cluster0.9m5yr.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
-});
-
-const Note = mongoose.model("Note", noteSchema);
-
-//////////// Middleware ////////////////////////
 
 app.use(express.static("build"));
 app.use(cors());
@@ -60,8 +40,10 @@ app.use(express.json());
 ////////// Notes API /////////////////////////
 
 app.get("/api/notes", (request, response) => {
-  // console.log("requested all the notes");
-  response.json(notes);
+  // Fetch from MongoDB
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 app.get("/api/notes/:id", (request, response) => {
