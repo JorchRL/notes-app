@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -24,6 +25,8 @@ const Note = require("./models/note");
 //   },
 // ];
 
+//////////// MIDDLEWARE //////////////////
+
 const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
   return maxId + 1;
@@ -39,6 +42,7 @@ app.use(express.json());
 
 ////////// Notes API /////////////////////////
 
+// Get all notes
 app.get("/api/notes", (request, response) => {
   // Fetch from MongoDB
   Note.find({}).then((notes) => {
@@ -46,12 +50,26 @@ app.get("/api/notes", (request, response) => {
   });
 });
 
+// Get note by id
 app.get("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((n) => n.id === id);
-  note ? response.json(note) : response.status(404).end();
+  // const id = request.params.id;
+  // Note.find({}).then((notes) => {
+  //   // The _id field is an object; we need to compare the toString() version
+  //   const note = notes.find((n) => n.id.toString() === id);
+  //   note ? response.json(note) : response.status(404).end();
+  // });
+
+  Note.findById(request.params.id)
+    .then((note) => {
+      response.json(note);
+    })
+    .catch((error) => {
+      // console.log("Error fetching note", error.message);
+      response.status(404).end();
+    });
 });
 
+// Delete a note by id
 app.delete("/api/notes/:id", (request, response) => {
   const id = Number(request.params.id);
   notes = notes.filter((n) => n.id !== id);
@@ -59,6 +77,7 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(200).send(`deleted note ${1}`);
 });
 
+// Save a new note
 app.post("/api/notes", (request, response) => {
   const body = request.body;
   console.log(body);
@@ -68,15 +87,16 @@ app.post("/api/notes", (request, response) => {
     });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
     date: new Date(),
-    id: generateId(),
-  };
+    // MongoDB will generate the id automatically
+  });
 
-  notes = notes.concat(note);
-  response.json(note);
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 ////////////////////////////
