@@ -13,7 +13,7 @@ app.use(express.json());
 ////////// Notes API /////////////////////////
 
 // Get all notes
-app.get("/api/notes", (request, response) => {
+app.get("/api/notes", (request, response, next) => {
   // Fetch from MongoDB
   Note.find({})
     .then((notes) => {
@@ -23,7 +23,7 @@ app.get("/api/notes", (request, response) => {
 });
 
 // Get note by id
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
   Note.findById(request.params.id)
     .then((note) => {
       if (note) {
@@ -36,7 +36,7 @@ app.get("/api/notes/:id", (request, response) => {
 });
 
 // Update a note by id
-app.put("/api/notes/:id", (request, response) => {
+app.put("/api/notes/:id", (request, response, next) => {
   const body = request.body;
 
   const note = {
@@ -52,7 +52,7 @@ app.put("/api/notes/:id", (request, response) => {
 });
 
 // Delete a note by id
-app.delete("/api/notes/:id", (request, response) => {
+app.delete("/api/notes/:id", (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
     .then((result) => {
       response.status(204).end();
@@ -61,14 +61,8 @@ app.delete("/api/notes/:id", (request, response) => {
 });
 
 // Save a new note
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
   const body = request.body;
-  console.log(body);
-  if (!body.content) {
-    return response.status(400).json({
-      error: "content missing",
-    });
-  }
 
   const note = new Note({
     content: body.content,
@@ -79,9 +73,8 @@ app.post("/api/notes", (request, response) => {
 
   note
     .save()
-    .then((savedNote) => {
-      response.json(savedNote);
-    })
+    .then((savedNote) => savedNote.toJSON())
+    .then((savedAndFormattedNote) => response.json(savedAndFormattedNote))
     .catch((error) => next(error));
 });
 
@@ -100,6 +93,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
