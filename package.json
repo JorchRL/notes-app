@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand --detectOpenHandles",
+    "start": " NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
     "build:ui": "rm -rf build && cd client/ && npm run build --prod && cp -r build ../ ",
     "deploy": "git push heroku main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
@@ -22,9 +22,7 @@
   },
   "devDependencies": {
     "jest": "^27.3.1",
-    "nodemon": "^2.0.13"
-  },
-  "jest": {
-    "testEnvironment": "node"
+    "nodemon": "^2.0.13",
+    "supertest": "^6.1.6"
   }
 }
