@@ -13,6 +13,7 @@ const unknownEndpoint = (request, response) => {
 };
 
 const errorHandler = (error, request, response, next) => {
+  console.log("HERE!");
   switch (error.name) {
     case "CastError":
       return response.status(400).send({ error: "malformatted id" });

@@ -8,10 +8,11 @@ const helper = require("./test_helper");
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  let noteObject = new Note(helper.initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(helper.initialNotes[1]);
-  await noteObject.save();
+
+  for (let note of helper.initialNotes) {
+    let noteObject = new Note(note);
+    await noteObject.save();
+  }
 });
 
 //// GET /api/notes
@@ -68,7 +69,7 @@ test("note without content is not added", async () => {
 });
 
 //// GET /api/notes/:id
-test.only("a specific note can be viewed", async () => {
+test("a specific note can be viewed", async () => {
   const notesAtStart = await helper.notesInDB();
   const noteToView = notesAtStart[0];
 
@@ -82,7 +83,7 @@ test.only("a specific note can be viewed", async () => {
 });
 
 //// DELETE /api/notes/:id
-test.only("a note can be deleted", async () => {
+test("a note can be deleted", async () => {
   const notesAtStart = await helper.notesInDB();
   const noteToDelete = notesAtStart[0];
 
