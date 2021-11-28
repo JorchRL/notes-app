@@ -4,36 +4,41 @@ const Note = require("../models/note");
 /// This is our notes api handled with an express Router
 
 // Get all notes
-notesRouter.get("/", (request, response, next) => {
-  // console.log("Requested all notes");
-  Note.find({})
-    .then((notes) => {
-      response.json(notes);
-    })
-    .catch((e) => next(e));
+notesRouter.get("/", async (request, response, next) => {
+  const notes = await Note.find({}).catch((e) => next(e));
+  response.json(notes);
 });
 
 // Save a new note
-notesRouter.post("/", (request, response, next) => {
+notesRouter.post("/", async (request, response, next) => {
   const body = request.body;
+
   const note = new Note({
     content: body.content,
     important: body.important || false,
     date: new Date(),
   });
 
-  note
-    .save()
-    .then((savedNote) => savedNote.toJSON())
-    .then((formattedNote) => response.json(formattedNote))
-    .catch((e) => next(e));
+  try {
+    const savedNote = await note.save();
+    response.json(savedNote);
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 // Get note by id
-notesRouter.get("/:id", (request, response, next) => {
-  Note.findById(request.params.id)
-    .then((note) => (note ? response.json(note) : response.status(404).send()))
-    .catch((e) => next(e));
+notesRouter.get("/:id", async (request, response, next) => {
+  try {
+    const note = await Note.findById(request.params.id);
+    if (note) {
+      response.json(note);
+    } else {
+      response.status(404).end();
+    }
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 // Update a note by id
@@ -49,10 +54,13 @@ notesRouter.put("/:id", (request, response, next) => {
 });
 
 // Delete note by id
-notesRouter.delete("/:id", (request, response, next) => {
-  Note.findByIdAndRemove(request.params.id)
-    .then((result) => response.status(204).end())
-    .catch((e) => next(e));
+notesRouter.delete("/:id", async (request, response, next) => {
+  try {
+    await Note.findByIdAndRemove(request.params.id);
+    response.status(204).end();
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 module.exports = notesRouter;
