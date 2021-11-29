@@ -32,12 +32,12 @@ notesRouter.get("/:id", async (request, response, next) => {
   try {
     const note = await Note.findById(request.params.id);
     if (note) {
-      response.json(note);
+      response.json(note.toJSON());
     } else {
       response.status(404).end();
     }
-  } catch (exception) {
-    next(exception);
+  } catch (error) {
+    next(error);
   }
 });
 

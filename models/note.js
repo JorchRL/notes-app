@@ -11,6 +11,7 @@ const noteSchema = new mongoose.Schema({
     required: true,
   },
   important: Boolean,
+  // _id: { type: String },
 });
 
 noteSchema.set("toJSON", {
