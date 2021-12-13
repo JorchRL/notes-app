@@ -6,7 +6,10 @@ const User = require("../models/user");
 // GET retrieve all users
 usersRouter.get("/", async (request, response, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate("notes", {
+      content: 1,
+      date: 1,
+    });
     response.status(200).json(users);
   } catch (error) {
     next(error);
