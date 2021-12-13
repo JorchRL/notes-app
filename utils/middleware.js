@@ -13,12 +13,14 @@ const unknownEndpoint = (request, response) => {
 };
 
 const errorHandler = (error, request, response, next) => {
-  console.log(error.name);
+  logger.error(error.name);
   switch (error.name) {
     case "CastError":
       return response.status(400).send({ error: "malformatted id" });
     case "ValidationError":
-      return response.status(400).json({ error: error.message });
+      return response
+        .status(400)
+        .json({ error: error.message, errorName: error.name });
     default:
       console.log("There was an unhandled error! Please check");
       next(error);
