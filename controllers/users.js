@@ -28,10 +28,10 @@ usersRouter.post("/", async (request, response, next) => {
 
   try {
     const savedUser = await user.save();
-    response.json(savedUser);
+    response.status(200).json(savedUser);
   } catch (error) {
     next(error);
   }
 });
 
-module.exports = usersRouter();
+module.exports = usersRouter;
