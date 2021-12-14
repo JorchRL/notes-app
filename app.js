@@ -2,9 +2,13 @@ const config = require("./utils/config");
 const express = require("express");
 const app = express();
 const cors = require("cors");
+
 const notesRouter = require("./controllers/notes");
 const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
+
 const middleware = require("./utils/middleware");
+
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 
@@ -25,10 +29,9 @@ app.use(express.json());
 
 app.use(middleware.requestLogger);
 
-// Router for the notes api
+// Api routes
 app.use("/api/notes", notesRouter);
-
-// Router for the users api
+app.use("/api/login", loginRouter);
 app.use("/api/users", usersRouter);
 
 app.use(middleware.unknownEndpoint);

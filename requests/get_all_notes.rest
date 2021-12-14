@@ -16,3 +16,24 @@ Content-Type: application/json
   "content": "Sent via VSCode!!!",
   "important": true
 }
+
+// create user
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "ternerita",
+  "name":"pati",
+  "password": "abc"
+}
+
+// login requests
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "ternerita",
+  "password":"abc"
+}
