@@ -8,12 +8,15 @@ Content-Type: application/json
 { "content": "Pelos es un gato tonto"
 }
 
+
+// Create post
 ####
 POST http://localhost:3001/api/notes HTTP/1.1
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlcm5lcml0YSIsImlkIjoiNjFiN2MzMDI2NjI3ZWJlNmE5ZTIzMWRkIiwiaWF0IjoxNjM5NDQ5MDAyfQ.UXR7F7tYFuFvkX5LEj-8M2PC5FIKB_OBz3PeNlCJSZo
 
 {
-  "content": "Sent via VSCode!!!",
+  "content": "Miaauuuu!",
   "important": true
 }
 

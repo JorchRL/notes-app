@@ -1,4 +1,7 @@
 const notesRouter = require("express").Router();
+const config = require("../utils/config");
+const jwt = require("jsonwebtoken");
+
 const Note = require("../models/note");
 const User = require("../models/user");
 
@@ -18,9 +21,39 @@ notesRouter.get("/", async (request, response, next) => {
 });
 
 // Save a new note
+//Helper function for token authorization (TODO: Move this into its own module)
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+    // return authorization.substring(7)
+    return authorization.split(" ")[1];
+  }
+  return null;
+};
+
 notesRouter.post("/", async (request, response, next) => {
   const body = request.body;
-  const user = await User.findById(body.userId);
+
+  const token = getTokenFrom(request);
+  if (!token) {
+    return response.status(401).json({ error: "token missing" });
+  }
+
+  // assume that if there is a token present, it is correctly formatted...
+  let decodedToken;
+
+  try {
+    decodedToken = jwt.verify(token, config.JWT_SECRET);
+  } catch (error) {
+    next(error);
+    return response.end();
+  }
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token is invalid" });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const note = new Note({
     content: body.content,
